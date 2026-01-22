@@ -22,6 +22,7 @@ spec:
     metadata:
       labels:
         app: nginx
+        namespace: default
     spec:
       containers:
         - name: nginx
