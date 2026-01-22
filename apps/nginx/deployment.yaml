@@ -1,13 +1,23 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: nginx
   namespace: default
 spec:
   replicas: 2
+  revisionHistoryLimit: 2
+
+  strategy:
+    canary:
+      steps:
+        - setWeight: 50
+        - pause: { duration: 30s }
+        - setWeight: 100
+
   selector:
     matchLabels:
       app: nginx
+
   template:
     metadata:
       labels:
@@ -18,6 +28,7 @@ spec:
           image: nginx:1.25
           ports:
             - containerPort: 80
+
 ---
 kind: Service
 apiVersion: v1
